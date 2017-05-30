@@ -112,48 +112,58 @@ draw = ImageDraw.Draw(image)
 # Draw a black filled box to clear the image.
 draw.rectangle((0,0,width,height), outline=0, fill=0)
 
-
 try:
-    while 1:
-        if GPIO.input(U_pin): # button is released
-            draw.polygon([(20, 20), (30, 2), (40, 20)], outline=255, fill=0)  #Up
-        else: # button is pressed:
-            draw.polygon([(20, 20), (30, 2), (40, 20)], outline=255, fill=1)  #Up filled
+	# Load default font.
+	font = ImageFont.load_default()
+ 
+	# Alternatively load a TTF font.
+	# Some other nice fonts to try: http://www.dafont.com/bitmap.php
+	#font = ImageFont.truetype('Minecraftia.ttf', 8)
+ 
+	# Write two lines of text.
+	draw.text((0, 0),  'Hello',  font=font, fill=255)
+	draw.text((0, 20), 'World!', font=font, fill=255)
 
-        if GPIO.input(L_pin): # button is released
-            draw.polygon([(0, 30), (18, 21), (18, 41)], outline=255, fill=0)  #left
-        else: # button is pressed:
-            draw.polygon([(0, 30), (18, 21), (18, 41)], outline=255, fill=1)  #left filled
-
-        if GPIO.input(R_pin): # button is released
-            draw.polygon([(60, 30), (42, 21), (42, 41)], outline=255, fill=0) #right
-        else: # button is pressed:
-            draw.polygon([(60, 30), (42, 21), (42, 41)], outline=255, fill=1) #right filled
-
-        if GPIO.input(D_pin): # button is released
-            draw.polygon([(30, 60), (40, 42), (20, 42)], outline=255, fill=0) #down
-        else: # button is pressed:
-            draw.polygon([(30, 60), (40, 42), (20, 42)], outline=255, fill=1) #down filled
-
-        if GPIO.input(C_pin): # button is released
-            draw.rectangle((20, 22,40,40), outline=255, fill=0) #center 
-        else: # button is pressed:
-            draw.rectangle((20, 22,40,40), outline=255, fill=1) #center filled
-
-        if GPIO.input(A_pin): # button is released
-            draw.ellipse((70,40,90,60), outline=255, fill=0) #A button
-        else: # button is pressed:
-            draw.ellipse((70,40,90,60), outline=255, fill=1) #A button filled
-
-        if GPIO.input(B_pin): # button is released
-            draw.ellipse((100,20,120,40), outline=255, fill=0) #B button
-        else: # button is pressed:
-            draw.ellipse((100,20,120,40), outline=255, fill=1) #B button filled
-
-        # Display image.
-        disp.image(image)
-        disp.display()
-        time.sleep(.01) 
+#    while 1:
+#        if GPIO.input(U_pin): # button is released
+#            draw.polygon([(20, 20), (30, 2), (40, 20)], outline=255, fill=0)  #Up
+#        else: # button is pressed:
+#            draw.polygon([(20, 20), (30, 2), (40, 20)], outline=255, fill=1)  #Up filled
+#
+#        if GPIO.input(L_pin): # button is released
+#            draw.polygon([(0, 30), (18, 21), (18, 41)], outline=255, fill=0)  #left
+#        else: # button is pressed:
+#            draw.polygon([(0, 30), (18, 21), (18, 41)], outline=255, fill=1)  #left filled
+#
+#        if GPIO.input(R_pin): # button is released
+#            draw.polygon([(60, 30), (42, 21), (42, 41)], outline=255, fill=0) #right
+#        else: # button is pressed:
+#            draw.polygon([(60, 30), (42, 21), (42, 41)], outline=255, fill=1) #right filled
+#
+#        if GPIO.input(D_pin): # button is released
+#            draw.polygon([(30, 60), (40, 42), (20, 42)], outline=255, fill=0) #down
+#        else: # button is pressed:
+#            draw.polygon([(30, 60), (40, 42), (20, 42)], outline=255, fill=1) #down filled
+#
+#        if GPIO.input(C_pin): # button is released
+#            draw.rectangle((20, 22,40,40), outline=255, fill=0) #center 
+#        else: # button is pressed:
+#            draw.rectangle((20, 22,40,40), outline=255, fill=1) #center filled
+#
+#        if GPIO.input(A_pin): # button is released
+#            draw.ellipse((70,40,90,60), outline=255, fill=0) #A button
+#        else: # button is pressed:
+#            draw.ellipse((70,40,90,60), outline=255, fill=1) #A button filled
+#
+#        if GPIO.input(B_pin): # button is released
+#            draw.ellipse((100,20,120,40), outline=255, fill=0) #B button
+#        else: # button is pressed:
+#            draw.ellipse((100,20,120,40), outline=255, fill=1) #B button filled
+#
+#        # Display image.
+	disp.image(image)
+	disp.display()
+	time.sleep(.01) 
 
 
 except KeyboardInterrupt: 

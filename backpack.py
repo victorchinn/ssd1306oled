@@ -25,6 +25,9 @@ from ctypes import c_short
 from ctypes import c_byte
 from ctypes import c_ubyte
 
+
+# =============================================================================
+# following is required for SSD1306OLED to be controlled in Adafruit Library
 import RPi.GPIO as GPIO
 
 import time
@@ -35,6 +38,24 @@ import ssd1306
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
+# =============================================================================
+
+# =============================================================================
+# FOR IFTTT event to fire
+import httplib
+import base64
+import sys
+
+# IFTTT_KEY = 'bo6U0C7dVkHlc0xRaeE6II'
+# dIG-vsAAZWsdP4NeHxsbcA #
+IFTTT_KEY = 'bLat1rLymZHak1SpVDdH6t'
+
+PORT      = 443
+URL       = 'maker.ifttt.com'
+API       = '/trigger/over_temperature/with/key/' + IFTTT_KEY
+# FOR IFTTT event to fire
+# =============================================================================
+
 
 
 # =============================================================================
@@ -135,6 +156,8 @@ class PiBMP280(object):
 
       return temperature/100.0,pressure/100.0
 
+
+
 def getShort(data, index):
   # return two bytes from data as a signed 16-bit value
   return c_short((data[index+1] << 8) + data[index]).value
@@ -154,6 +177,24 @@ def getUChar(data,index):
   # return one byte from data as an unsigned char
   result =  data[index] & 0xFF
   return result
+
+# =============================================================================
+# this method gets called when an overtemperature triggers ... 
+# using IFTTT send the over_temperature event trigger which (web action) that sends an sms message to my cell phone
+#
+def overtemp_event():
+  
+  conn = httplib.HTTPSConnection(URL, PORT)
+
+  conn.request('GET', API)
+  r1 = conn.getresponse()
+  print "status " + str(r1.status) + ", reason " + str(r1.reason)
+  data1 = r1.read()
+  print "data: " + str(data1)
+  conn.close()
+  
+  return 
+
 
 
 # Raspberry Pi pin configuration:
@@ -186,6 +227,7 @@ def main():
     # Draw a black filled box to clear the image.
     draw.rectangle((0,0,width,height), outline=0, fill=0)
 
+    # =============================================================================
     # create an instance of my pi bmp280 sensor object
     pi_bmp280 = PiBMP280()
     
@@ -200,6 +242,7 @@ def main():
         print "Temperature :", temperature, "C"
         print "   Pressure :", pressure, "hPa"
 
+        # =============================================================================
         # Load default font.
         font = ImageFont.load_default()
  
@@ -217,6 +260,13 @@ def main():
         # Draw a black filled box to clear the image else redrawn text clutters display and makes text unreadable
         draw.rectangle((0,0,width,height), outline=0, fill=0)
 
+      
+      # =============================================================================
+
+        # if over temperature then send IFTTT and stop
+        if (temperature >=27):
+          overtemp_event()
+          break
 
 if __name__=="__main__":
    main()
